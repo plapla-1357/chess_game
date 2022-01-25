@@ -46,20 +46,44 @@ class Chess_game:
 
     def IsPiece(self, position):
         return self.board[position[0]][int(position[1])] != self.CASE_NOTHING
+    
+    def pawn_move(self, position, color):
+        """get all the ligual move posible
 
-    def move(self, piece, position: str, takes=False):
+        Arguments:
+            position {str} -- position of the pawn
+        Return:
+            moves list[str] -- all move posible
+        """
+        forward = 1 if color == 'W' else -1
+        start_pawn_line = 2 if color == 'W' else 7
+        
+        lettre, ligne = tuple(position)
+        moves = []
+        if not self.IsPiece(lettre+str(int(ligne)+forward)):# avancer d'une case
+            moves.append(lettre+str(int(ligne)+forward))
+            if not self.IsPiece(lettre+str(int(ligne)+2*forward)) and ligne == start_pawn_line: # avanver de deux case
+                
+                
+            
+            
+        
+
+    def move(self, piece, position: str,color takes=False):
         # verifier si la posistion est posible
         # bouger la piece
         # enlever de sa position precedente
         can_move = False
         match piece[0]:  # todo check les echec a la decouvert et donc coup ilegaux
             case "P":
-                if not self.IsPiece(position):
+                if position in self.pawn_move(piece[1:], color):
                     can_move = True
+                    
+                    
         print(can_move)
 
 
 if __name__ == "__main__":
     chess_game = Chess_game()
-    chess_game.move("PD2", "D4")
+    chess_game.move("PD2", "D3", "W")
     
