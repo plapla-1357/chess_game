@@ -3,7 +3,7 @@ import pandas as pd
 
 
 class Chess_game:
-    CASE_NOTHING = "_-_"
+    CASE_NOTHING = "| |"
 
     def __init__(self):
         self.board = self.create_board()
@@ -39,7 +39,7 @@ class Chess_game:
         board[7, 4] = "K-B"
         board[0, 4] = "K-W"
 
-        board[7, 3] = "Q-W"
+        board[7, 3] = "Q-B"
         board[0, 3] = "Q-W"
 
         return pd.DataFrame(board, [i for i in range(1, 9)], [chr(65 + i) for i in range(8)], dtype="string")
@@ -57,19 +57,24 @@ class Chess_game:
         """
         forward = 1 if color == 'W' else -1
         start_pawn_line = 2 if color == 'W' else 7
-        
-        lettre, ligne = tuple(position)
+
+        lettre = position[0]
+        ligne = int(position[1])
         moves = []
-        if not self.IsPiece(lettre+str(int(ligne)+forward)):# avancer d'une case
-            moves.append(lettre+str(int(ligne)+forward))
-            if not self.IsPiece(lettre+str(int(ligne)+2*forward)) and ligne == start_pawn_line: # avanver de deux case
+        
+        if not self.IsPiece(lettre+str(ligne+forward)):# avancer d'une case
+            moves.append(lettre+str(ligne+forward))
+            
+            if not self.IsPiece(lettre+str(ligne+2*forward)) and ligne == start_pawn_line: # avanver de deux case
+                moves.append(lettre+str(ligne+2*forward))
                 
+        return moves
                 
             
             
         
 
-    def move(self, piece, position: str,color takes=False):
+    def move(self, piece, position: str,color, takes=False):
         # verifier si la posistion est posible
         # bouger la piece
         # enlever de sa position precedente
@@ -79,11 +84,20 @@ class Chess_game:
                 if position in self.pawn_move(piece[1:], color):
                     can_move = True
                     
-                    
+        if can_move:
+            self.board.at[int(piece[2]), piece[1]] = self.CASE_NOTHING
+            self.board.at[int(position[1]), position[0]] = "P-"+color
+        else:
+            print("an error append")
         print(can_move)
+        print(self.board)
 
 
 if __name__ == "__main__":
     chess_game = Chess_game()
-    chess_game.move("PD2", "D3", "W")
+    chess_game.move("PD2", "D4", "W")
+    chess_game.move("PD7", "D5", "B")
+    chess_game.move("PC2", "C4", "W")
+
+    
     
